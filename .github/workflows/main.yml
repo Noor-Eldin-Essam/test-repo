@@ -1,4 +1,4 @@
-name: Deploy Website
+name: Example GitHub Action
 
 on:
   push:
@@ -6,21 +6,14 @@ on:
       - main
 
 jobs:
-  deploy:
+  example-job:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Node.js (if you need it for build)
-        uses: actions/setup-node@v3
-        with:
-          node-version: '14'
-
-      - name: Deploy to Hosting (e.g., GitHub Pages)
-        env:
-          SECRET_API_KEY: ${{ secrets.SECRET_APP_TOKEN }}
+      - name: Use secret API token
         run: |
-          echo "Deploying with secret: $SECRET_APP_TOKEN"
-          # Deploy your static website code here
+          echo "Using the secret API token..."
+          curl -X GET "https://api.example.com/data" -H "Authorization: Bearer ${{ secrets.SECRET_API_TOKEN }}"
