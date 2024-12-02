@@ -1,21 +1,19 @@
 name: Deploy Static Site
-
-on: [push]
-
+on:
+  push:
+    branches:
+      - main
 jobs:
-  deploy:
+  build-deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      
-      - name: Replace Secret
-        env:
-          API_TOKEN: ${{ secrets.SECRET_API_TOKEN }}
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Inject Tokens
         run: |
-          sed -i "s|{{SECRET_API_TOKEN}}|$API_TOKEN|g" index.html
-      
+          echo "export const validTokens = ['${{ secrets.SECRET_API_TOKEN }}'}'];" > ./tokens.js
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
+          publish_dir: ./
