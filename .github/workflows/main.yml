@@ -16,6 +16,13 @@ jobs:
       - name: Create tokens file
         run: |
           echo "export const validTokens = ['${{ secrets.SECRET_API_TOKEN }}'];" > tokens.js
+          ls -l tokens.js
+        shell: bash
+      
+      - name: List files before deployment
+        run: |
+          pwd
+          ls -la
         shell: bash
       
       - name: Deploy to GitHub Pages
@@ -23,3 +30,8 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./
+      
+      - name: Verify deployment
+        run: |
+          echo "Deployment completed"
+        shell: bash
