@@ -1,6 +1,8 @@
 import { validTokens } from './tokens.js';
 
 document.addEventListener('DOMContentLoaded', () => {
+    console.log(validTokens);
+    
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
 
