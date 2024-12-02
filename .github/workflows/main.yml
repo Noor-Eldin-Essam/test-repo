@@ -1,18 +1,23 @@
 name: Deploy Static Site
+
 on:
   push:
     branches:
       - main
+
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
-
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      - name: Inject Tokens
+      
+      - name: Create tokens file
         run: |
-          echo "export const validTokens = ['${{ secrets.SECRET_API_TOKEN }}'}'];" > ./tokens.js
+          echo "export const validTokens = ['${{ secrets.SECRET_API_TOKEN }}'];" > tokens.js
+        shell: bash
+      
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
