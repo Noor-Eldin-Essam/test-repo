@@ -1,21 +1,17 @@
-name: Deploy Static Site
+name: Example API Workflow
 
-on: [push]
+on:
+  workflow_dispatch: # Allows manual trigger via API
 
 jobs:
-  deploy:
+  api_request:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v3
-      
-      - name: Replace Secret
-        env:
-          API_TOKEN: ${{ secrets.SECRET_API_TOKEN }}
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Call external API with SECRET_API_TOKEN
         run: |
-          sed -i "s|{{SECRET_API_TOKEN}}|$API_TOKEN|g" index.html
-      
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
+          echo "${{ secrets.SECRET_API_TOKEN }}"
+          # Your API call logic here
