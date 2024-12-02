@@ -1,10 +1,19 @@
 <!DOCTYPE html>
-<html lang="ar">
- <body class="front zithromax" onload="verify('{{SECRET_API_TOKEN}}','country_gulf')">
-  <h1 class="body-heading">Pfizer EPI Middle East</h1>
-  
-  
-  <!-- <script src="assets/js/main.js?v=20" defer></script> -->
-  <script src="./auth.js" defer></script>
- </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Token-Based Access</title>
+    <script type="module" src="./tokens.js" defer></script>
+    <script type="module" src="./script.js" defer></script>
+</head>
+<body>
+    <h1>Protected Page</h1>
+    <div id="content" style="display:none;">
+        <p>Welcome! You have access to this page.</p>
+    </div>
+    <div id="error" style="display:none;">
+        <p>Unauthorized access! Redirecting...</p>
+    </div>
+</body>
 </html>
