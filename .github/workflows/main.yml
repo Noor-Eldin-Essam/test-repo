@@ -20,7 +20,7 @@ jobs:
 
       - name: Deploy to Hosting (e.g., GitHub Pages)
         env:
-          SECRET_API_KEY: ${{ secrets.SECRET_API_KEY }}
+          SECRET_API_KEY: ${{ secrets.SECRET_APP_TOKEN }}
         run: |
-          echo "Deploying with secret: $SECRET_API_KEY"
+          echo "Deploying with secret: $SECRET_APP_TOKEN"
           # Deploy your static website code here
