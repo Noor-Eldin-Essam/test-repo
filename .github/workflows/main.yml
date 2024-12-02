@@ -1,0 +1,26 @@
+name: Deploy Website
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js (if you need it for build)
+        uses: actions/setup-node@v3
+        with:
+          node-version: '14'
+
+      - name: Deploy to Hosting (e.g., GitHub Pages)
+        env:
+          SECRET_API_KEY: ${{ secrets.APP_TOKEN }}
+        run: |
+          echo "Deploying with secret: $APP_TOKEN"
+          # Deploy your static website code here
