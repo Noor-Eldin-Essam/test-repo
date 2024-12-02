@@ -1,25 +1,21 @@
-name: Deploy Website
+name: Deploy Static Site
 
-on:
-  push:
-    branches:
-      - main
+on: [push]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Replace placeholders with SECRET_API_TOKEN
-        run: |
-          grep -rl '{{SECRET_API_TOKEN}}' . | xargs sed -i 's/{{SECRET_API_TOKEN}}/'"$SECRET_API_TOKEN"'/g'
+      - uses: actions/checkout@v3
+      
+      - name: Replace Secret
         env:
-          SECRET_API_TOKEN: ${{ secrets.SECRET_API_TOKEN }}
-
-      - name: Deploy to Hosting
+          API_TOKEN: ${{ secrets.SECRET_API_TOKEN }}
         run: |
-          echo "Deploying..."
-          # Deployment script here
+          sed -i "s|{{SECRET_API_TOKEN}}|$API_TOKEN|g" index.html
+      
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
