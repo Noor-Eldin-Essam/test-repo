@@ -40,9 +40,9 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
-          destination_dir: .
-      
+          publish_dir: .   # Make sure your static files are in the root or change to correct folder
+          destination_dir: . # Deploying to root (adjust as necessary)
+
       - name: Verify deployment
         run: |
           echo "Deployment completed"
