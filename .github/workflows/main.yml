@@ -1,52 +1,32 @@
-name: Deploy Static Site
+name: Deploy Plain HTML/JS App
 
 on:
   push:
     branches:
-      - main  # Trigger on push to main branch
+      - main
 
 jobs:
-  build-deploy:
+  deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
-      - name: Checkout code
+      # Step 1: Check out the repository
+      - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Remove old tokens.js file (if exists)
+      # Step 2: Create the tokens.js file dynamically
+      - name: Create tokens.js
         run: |
-          if [ -f tokens.js ]; then
-            echo "Removing old tokens.js file"
-            rm tokens.js
-          else
-            echo "No existing tokens.js file to remove"
-          fi
-        shell: bash
+          echo "export const tokens = ['${{ secrets.SECRET_API_TOKEN }}'];" > tokens.js
 
-      - name: Create hashed token file
+      # Step 3: Add the tokens.js file to the build directory
+      - name: Add tokens.js to the build
         run: |
-          # Hash the secret using SHA-256 and encode it in Base64
-          HASHED_TOKEN=$(echo -n "${{ secrets.SECRET_API_TOKEN }}" | sha256sum | awk '{print $1}' | xxd -r -p | base64)
-          # Write the hashed token to tokens.js
-          echo "export const validTokens = ['${HASHED_TOKEN}'];" > tokens.js
-          echo "Hashed tokens.js file created:"
-          cat tokens.js
-        shell: bash
+          mv tokens.js .
 
-      - name: List files before deployment
-        run: |
-          pwd
-          ls -la
-        shell: bash
-
+      # Step 4: Deploy the build (to GitHub Pages or another host)
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
-          destination_dir: .
-
-      - name: Verify deployment
-        run: |
-          echo "Deployment completed"
-        shell: bash
+          publish_dir: . # Adjust to the directory containing your HTML/JS files
