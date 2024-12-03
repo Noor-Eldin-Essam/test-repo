@@ -36,7 +36,6 @@ jobs:
           cat tokens.js
         shell: bash
 
-      # Debugging step: List files after creating tokens.js
       - name: List files after creating tokens.js
         run: |
           ls -la
@@ -52,10 +51,17 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .   # Ensure correct directory is used
-          destination_dir: . # Deploying to root (adjust as necessary)
+          publish_dir: .   # Make sure this is the correct directory
+          destination_dir: .
+
+      - name: List files after deployment
+        run: |
+          git fetch origin gh-pages
+          git checkout gh-pages
+          ls -la
+        shell: bash
 
       - name: Verify deployment
         run: |
           echo "Deployment completed"
-        shell: bash 
+        shell: bash
