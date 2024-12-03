@@ -1,1 +1,1 @@
-export const validTokens = ['aabbcc'];
+export const validTokens = ['112233'];
