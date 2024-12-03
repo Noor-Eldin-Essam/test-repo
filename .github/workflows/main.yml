@@ -3,7 +3,7 @@ name: Deploy Static Site
 on:
   push:
     branches:
-      - main
+      - main  # Trigger on push to main branch
 
 jobs:
   build-deploy:
@@ -12,8 +12,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      
-      - name: Remove old tokens file (if exists)
+
+      - name: Remove old tokens.js file (if exists)
         run: |
           if [ -f tokens.js ]; then
             echo "Removing old tokens.js file"
@@ -22,27 +22,30 @@ jobs:
             echo "No existing tokens.js file to remove"
           fi
         shell: bash
-      
-      - name: Create new tokens file
+
+      - name: Create hashed token file
         run: |
-          echo "export const validTokens = ['${{ secrets.SECRET_API_TOKEN }}'];" > tokens.js
-          echo "New tokens.js file created:"
+          # Hash the secret using SHA-256 and encode it in Base64
+          HASHED_TOKEN=$(echo -n "${{ secrets.SECRET_API_TOKEN }}" | sha256sum | awk '{print $1}' | xxd -r -p | base64)
+          # Write the hashed token to tokens.js
+          echo "export const validTokens = ['${HASHED_TOKEN}'];" > tokens.js
+          echo "Hashed tokens.js file created:"
           cat tokens.js
         shell: bash
-      
+
       - name: List files before deployment
         run: |
           pwd
           ls -la
         shell: bash
-      
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: .
           destination_dir: .
-      
+
       - name: Verify deployment
         run: |
           echo "Deployment completed"

@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Token-Based Access</title>
-    <script type="module" src="./tokens.js" defer></script>
-    <script type="module" src="./script.js" defer></script>
 </head>
 <body>
     <h1>Protected Page</h1>
@@ -15,5 +13,9 @@
     <div id="error" style="display:none;">
         <p>Unauthorized access! Redirecting...</p>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js" integrity="sha512-a+SUDuwNzXDvz4XrIcXHuCf089/iJAoN4lmrXJg18XnduKK6YlDHNRalv4yd1N40OKI80tFidF+rqTFKGPoWFQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script type="module" src="./tokens.js" defer></script>
+    <script type="module" src="./script.js" defer></script>
 </body>
 </html>
