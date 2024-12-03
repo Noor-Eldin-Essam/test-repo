@@ -13,8 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log(token);
     
     // Hash the token from the URL using SHA-256 and convert to Base64
-    const hashedToken = CryptoJS.SHA256(token).toString(CryptoJS.enc.Base64);
-    console.log(hashedToken);
+    // const hashedToken = CryptoJS.SHA256(token).toString(CryptoJS.enc.Base64);
+    // console.log(hashedToken);
     console.log(validTokens[0]);
     
     
@@ -29,10 +29,10 @@ document.addEventListener('DOMContentLoaded', () => {
 //     }
 });
 
-function showError() {
-    // Show error and redirect
-    document.getElementById('error').style.display = 'block';
-    setTimeout(() => {
-        window.location.href = '/unauthorized.html';  // Redirect to unauthorized page
-    }, 3000);  // Redirect after 3 seconds
-}
+// function showError() {
+//     // Show error and redirect
+//     document.getElementById('error').style.display = 'block';
+//     setTimeout(() => {
+//         window.location.href = '/unauthorized.html';  // Redirect to unauthorized page
+//     }, 3000);  // Redirect after 3 seconds
+// }
