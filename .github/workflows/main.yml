@@ -1,4 +1,4 @@
-name: Deploy Plain HTML/JS App
+name: Deploy Static Site
 
 on:
   push:
@@ -6,27 +6,44 @@ on:
       - main
 
 jobs:
-  deploy:
+  build-deploy:
     runs-on: ubuntu-latest
-
+    
     steps:
-      # Step 1: Check out the repository
-      - name: Checkout Code
+      - name: Checkout code
         uses: actions/checkout@v3
-
-      # Step 2: Create the tokens.js file dynamically
-      - name: Create tokens.js
+      
+      - name: Remove old tokens file (if exists)
         run: |
-          echo "export const tokens = ['${{ secrets.SECRET_API_TOKEN }}'];" > tokens.js
-
-      # Step 3: Add the tokens.js file to the build directory
-      - name: Add tokens.js to the build
+          if [ -f tokens.js ]; then
+            echo "Removing old tokens.js file"
+            rm tokens.js
+          else
+            echo "No existing tokens.js file to remove"
+          fi
+        shell: bash
+      
+      - name: Create new tokens file
         run: |
-          mv tokens.js .
-
-      # Step 4: Deploy the build (to GitHub Pages or another host)
+          echo "export const validTokens = ['${{ secrets.SECRET_API_TOKEN }}'];" > tokens.js
+          echo "New tokens.js file created:"
+          cat tokens.js
+        shell: bash
+      
+      - name: List files before deployment
+        run: |
+          pwd
+          ls -la
+        shell: bash
+      
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: . # Adjust to the directory containing your HTML/JS files
+          publish_dir: .   # Make sure your static files are in the root or change to correct folder
+          destination_dir: . # Deploying to root (adjust as necessary)
+
+      - name: Verify deployment
+        run: |
+          echo "Deployment completed"
+        shell: bash
