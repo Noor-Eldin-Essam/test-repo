@@ -58,4 +58,4 @@ jobs:
       - name: Verify deployment
         run: |
           echo "Deployment completed"
-        shell: bash
+        shell: bash 
