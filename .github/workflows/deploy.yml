@@ -24,18 +24,11 @@ jobs:
           fi
         shell: bash
 
-      # Create new tokens.js file
+      # Create new tokens.js file (without committing it)
       - name: Create new tokens.js file
         run: |
-          echo "export const validTokens = ['${{ secrets.SECRET_API_TOKEN }}'];" > ./tokens.js
-          echo "New tokens.js file created:"
-          cat tokens.js
-        shell: bash
-
-      # Temporarily remove tokens.js from .gitignore
-      - name: Temporarily remove tokens.js from .gitignore
-        run: |
-          sed -i '/tokens.js/d' .gitignore
+          echo "export const validTokens = ['${{ secrets.SECRET_API_TOKEN }}'];" > tokens.js
+          echo "New tokens.js file created"
         shell: bash
 
       # List files after creating tokens.js
@@ -44,12 +37,13 @@ jobs:
           ls -la
         shell: bash
 
-      # List files before deployment
-      - name: List files before deployment
+      # Temporarily add tokens.js to Git to commit it to deploy
+      - name: Temporarily add tokens.js to Git
         run: |
-          pwd
-          ls -la
+          git add tokens.js
+          git commit -m "Add tokens.js for deployment"
         shell: bash
+        continue-on-error: true # Allow failure if no changes are made
 
       # Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
@@ -59,10 +53,12 @@ jobs:
           publish_dir: ./  # This assumes all files (index.html, etc.) are in the root directory
           destination_dir: .
 
-      # Add tokens.js back to .gitignore
-      - name: Add tokens.js back to .gitignore
+      # Remove tokens.js from Git (ensure it's not committed)
+      - name: Remove tokens.js from Git
         run: |
-          echo "tokens.js" >> .gitignore
+          git rm tokens.js
+          git commit -m "Remove tokens.js"
+          git push
         shell: bash
 
       # Verify deployment
