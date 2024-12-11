@@ -1,5 +1,4 @@
-name: Deploy Static Site tokens
-
+name: Deploy Static Site
 on:
   push:
     branches:
@@ -12,50 +11,17 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      # Step: Add tokens.js to .gitignore if it's not already there
-      - name: Ensure tokens.js is ignored by Git
+      
+      - name: Create config file
         run: |
-          echo "tokens.js" >> .gitignore
+          echo "// Auto-generated configuration" > config.js
+          echo "window.CONFIG = {" >> config.js
+          echo "  API_TOKEN: '${{ secrets.SECRET_API_TOKEN }}'," >> tokens.js
+          echo "};" >> tokens.js
         shell: bash
       
-      - name: Remove old tokens file (if exists)
-        run: |
-          if [ -f tokens.js ]; then
-            echo "Removing old tokens.js file"
-            rm tokens.js
-          else
-            echo "No existing tokens.js file to remove"
-          fi
-        shell: bash
-
-      - name: Create new tokens file
-        run: |
-          echo "export const validTokens = ['${{ secrets.SECRET_API_TOKEN }}'];" > tokens.js
-          echo "New tokens.js file created:"
-          cat tokens.js
-        shell: bash
-
-      # Debugging step: List files after creating tokens.js
-      - name: List files after creating tokens.js
-        run: |
-          ls -la
-        shell: bash
-
-      - name: List files before deployment
-        run: |
-          pwd
-          ls -la
-        shell: bash
-
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .   # Ensure correct directory is used
-          destination_dir: . # Deploying to root (adjust as necessary)
-
-      - name: Verify deployment
-        run: |
-          echo "Deployment completed"
-        shell: bash
+          publish_dir: .
