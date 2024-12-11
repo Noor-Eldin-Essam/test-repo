@@ -10,7 +10,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Remove old tokens file (if exists)
+      # Remove old tokens.js file (if exists)
       - name: Remove old tokens.js file (if exists)
         run: |
           if [ -f tokens.js ]; then
@@ -27,6 +27,12 @@ jobs:
           echo "export const validTokens = ['${{ secrets.SECRET_API_TOKEN }}'];" > ./tokens.js
           echo "New tokens.js file created:"
           cat tokens.js
+        shell: bash
+
+      # Temporarily remove tokens.js from .gitignore
+      - name: Temporarily remove tokens.js from .gitignore
+        run: |
+          sed -i '/tokens.js/d' .gitignore
         shell: bash
 
       # List files after creating tokens.js
@@ -47,8 +53,14 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .  # Make sure this is correct if index.html is in the root
+          publish_dir: .  # Make sure this is the correct directory where your `index.html` is
           destination_dir: .
+
+      # Add tokens.js back to .gitignore
+      - name: Add tokens.js back to .gitignore
+        run: |
+          echo "tokens.js" >> .gitignore
+        shell: bash
 
       # Verify deployment
       - name: Verify deployment
