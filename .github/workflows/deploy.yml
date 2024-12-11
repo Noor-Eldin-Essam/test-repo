@@ -1,27 +1,36 @@
-name: Deploy Static Site
+name: Deploy to GitHub Pages
 on:
   push:
     branches:
       - main
-
 jobs:
-  build-deploy:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v3
       
-      - name: Create config file
+      - name: Create Config File
         run: |
-          echo "// Auto-generated configuration" > config.js
+          # Explicitly create config.js
+          echo "// Generated Configuration" > config.js
           echo "window.CONFIG = {" >> config.js
-          echo "  API_TOKEN: '${{ secrets.SECRET_API_TOKEN }}'," >> tokens.js
-          echo "};" >> tokens.js
+          echo "  API_TOKEN: '${{ secrets.SECRET_API_TOKEN }}'," >> config.js
+          echo "};" >> config.js
+          
+          # Show file contents for verification
+          echo "Config file contents:"
+          cat config.js
+        shell: bash
+      
+      - name: List Files
+        run: |
+          echo "Listing files before deployment:"
+          ls -la
         shell: bash
       
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: JamesIves/github-pages-deploy-action@v4
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
+          folder: . # Deploy entire repository
+          force: true # Force push if needed
