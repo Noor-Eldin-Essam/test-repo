@@ -1,31 +1,17 @@
 name: Deploy Static Site
 
-on:
-  push:
-    branches:
-      - main
+on: push
 
 jobs:
   build-deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Step: Add tokens.js to .gitignore if it's not already there
-      - name: Ensure tokens.js is ignored by Git
-        run: |
-          echo "tokens.js" >> .gitignore
-        shell: bash
-
-      # Step: Temporarily remove tokens.js from .gitignore
-      - name: Temporarily remove tokens.js from .gitignore
-        run: |
-          sed -i '/tokens.js/d' .gitignore
-        shell: bash
-      
-      - name: Remove old tokens file (if exists)
+      # Remove old tokens file (if exists)
+      - name: Remove old tokens.js file (if exists)
         run: |
           if [ -f tokens.js ]; then
             echo "Removing old tokens.js file"
@@ -35,38 +21,36 @@ jobs:
           fi
         shell: bash
 
-      - name: Create new tokens file
+      # Create new tokens.js file (This file will not be tracked by git)
+      - name: Create new tokens.js file
         run: |
-          echo "export const validTokens = ['${{ secrets.SECRET_API_TOKEN }}'];" > tokens.js
+          echo "export const validTokens = ['${{ secrets.SECRET_API_TOKEN }}'];" > ./tokens.js
           echo "New tokens.js file created:"
           cat tokens.js
         shell: bash
 
-      # Debugging step: List files after creating tokens.js
+      # List files after creating tokens.js
       - name: List files after creating tokens.js
         run: |
           ls -la
         shell: bash
 
+      # List files before deployment
       - name: List files before deployment
         run: |
           pwd
           ls -la
         shell: bash
 
+      # Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .   # Ensure correct directory is used
-          destination_dir: . # Deploying to root (adjust as necessary)
-      
-      # Step: Re-add tokens.js to .gitignore
-      - name: Re-add tokens.js to .gitignore
-        run: |
-          echo "tokens.js" >> .gitignore
-        shell: bash
+          publish_dir: .  # Make sure this is correct if index.html is in the root
+          destination_dir: .
 
+      # Verify deployment
       - name: Verify deployment
         run: |
           echo "Deployment completed"
