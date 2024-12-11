@@ -31,15 +31,11 @@ jobs:
           echo "New tokens.js file created"
         shell: bash
 
-      # List files after creating tokens.js
-      - name: List files after creating tokens.js
-        run: |
-          ls -la
-        shell: bash
-
       # Temporarily add tokens.js to Git to commit it to deploy
       - name: Temporarily add tokens.js to Git
         run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "github-actions@github.com"
           git add tokens.js
           git commit -m "Add tokens.js for deployment"
         shell: bash
@@ -57,8 +53,8 @@ jobs:
       - name: Remove tokens.js from Git
         run: |
           git rm tokens.js
-          git commit -m "Remove tokens.js"
-          git push
+          git commit -m "Remove tokens.js after deployment"
+          git push origin HEAD:main
         shell: bash
 
       # Verify deployment
