@@ -28,7 +28,7 @@ jobs:
 
       - name: Create new tokens file
         run: |
-          echo "export const validTokens = ['${{ secrets.SECRET_API_TOKEN }}'];" > tokens.js
+          echo "export const validTokens = ['${{ secrets.SECRET_API_TOKEN }}'];" > ./tokens.js
           echo "New tokens.js file created:"
           cat tokens.js
         shell: bash
