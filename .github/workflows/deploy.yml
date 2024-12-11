@@ -1,9 +1,6 @@
 name: Deploy Static Site
 
-on:
-  push:
-    branches:
-      - main  # or the branch you're pushing from
+on: push
 
 jobs:
   build-deploy:
