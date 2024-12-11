@@ -24,9 +24,8 @@ jobs:
         run: |
           sed -i '/tokens.js/d' .gitignore
         shell: bash
-
-      # Step: Remove old tokens file (if exists)
-      - name: Remove old tokens.js file (if exists)
+      
+      - name: Remove old tokens file (if exists)
         run: |
           if [ -f tokens.js ]; then
             echo "Removing old tokens.js file"
@@ -36,8 +35,7 @@ jobs:
           fi
         shell: bash
 
-      # Step: Create new tokens file
-      - name: Create new tokens.js file
+      - name: Create new tokens file
         run: |
           echo "export const validTokens = ['${{ secrets.SECRET_API_TOKEN }}'];" > tokens.js
           echo "New tokens.js file created:"
@@ -50,28 +48,25 @@ jobs:
           ls -la
         shell: bash
 
-      # List files before deployment
       - name: List files before deployment
         run: |
           pwd
           ls -la
         shell: bash
 
-      # Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: .   # Ensure correct directory is used
           destination_dir: . # Deploying to root (adjust as necessary)
-
+      
       # Step: Re-add tokens.js to .gitignore
       - name: Re-add tokens.js to .gitignore
         run: |
           echo "tokens.js" >> .gitignore
         shell: bash
 
-      # Verify deployment
       - name: Verify deployment
         run: |
           echo "Deployment completed"
