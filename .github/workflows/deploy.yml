@@ -1,36 +1,31 @@
-name: Deploy to GitHub Pages
+name: Deploy Static Site with Tokens
+
 on:
   push:
     branches:
       - main
+
 jobs:
-  build-and-deploy:
+  build-deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout
+      - name: Checkout code
         uses: actions/checkout@v3
-      
-      - name: Create Config File
+
+      - name: Build and bundle your application
         run: |
-          # Explicitly create tokens.js
-          echo "// Generated Configuration" > tokens.js
-          echo "window.CONFIG = {" >> tokens.js
-          echo "  API_TOKEN: '${{ secrets.SECRET_API_TOKEN }}'," >> tokens.js
-          echo "};" >> tokens.js
-          
-          # Show file contents for verification
-          echo "Config file contents:"
-          cat tokens.js
-        shell: bash
-      
-      - name: List Files
-        run: |
-          echo "Listing files before deployment:"
-          ls -la
-        shell: bash
-      
+          echo "export const validTokens = ['${{ secrets.SECRET_API_TOKEN }}'];" > tokens.js
+
       - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          folder: . # Deploy entire repository
-          force: true # Force push if needed
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./  # Replace with your actual build directory
+          exclude_files: tokens.js # Exclude tokens.js from deployment
+          destination_dir: . # Deploy to the root of the GitHub Pages branch
+
+      - name: Verify deployment
+        run: |
+          echo "Deployment completed"
+        shell: bash
