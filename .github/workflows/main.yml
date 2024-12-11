@@ -63,5 +63,5 @@ jobs:
       # Step 7: Verify deployment
       - name: Verify deployment
         run: |
-          echo "Deployment completed successfully!"
+          echo "Deployment completed"
         shell: bash
