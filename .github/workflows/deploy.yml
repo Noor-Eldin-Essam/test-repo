@@ -10,15 +10,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Ensure tokens.js is ignored by Git
-      - name: Ensure tokens.js is ignored by Git
-        run: |
-          echo "tokens.js" >> .gitignore
-          git add .gitignore
-          git commit -m "Ensure tokens.js is ignored"
-          git push
-        shell: bash
-
       # Remove old tokens file (if exists)
       - name: Remove old tokens file (if exists)
         run: |
