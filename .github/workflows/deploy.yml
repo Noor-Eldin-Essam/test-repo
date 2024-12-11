@@ -10,6 +10,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      # Ensure tokens.js is ignored by Git (if not already)
+      - name: Add tokens.js to .gitignore
+        run: |
+          echo "tokens.js" >> .gitignore
+        shell: bash
+
       # Remove old tokens file (if exists)
       - name: Remove old tokens file (if exists)
         run: |
@@ -21,14 +27,15 @@ jobs:
           fi
         shell: bash
 
-      # Create new tokens file
-      - name: Create new tokens file
+      # Create new tokens.js file only during build
+      - name: Create new tokens file for deployment
         run: |
           echo "export const validTokens = ['${{ secrets.SECRET_API_TOKEN }}'];" > ./tokens.js
-          echo "New tokens.js file created:"
+          echo "New tokens.js file created for deployment:"
           cat tokens.js
         shell: bash
 
+      # List files after creating tokens.js
       - name: List files after creating tokens.js
         run: |
           ls -la
