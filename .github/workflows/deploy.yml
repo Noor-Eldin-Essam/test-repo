@@ -12,11 +12,11 @@ jobs:
       
       - name: Create Config File
         run: |
-          # Explicitly create config.js
-          echo "// Generated Configuration" > config.js
-          echo "window.CONFIG = {" >> config.js
-          echo "  API_TOKEN: '${{ secrets.SECRET_API_TOKEN }}'," >> config.js
-          echo "};" >> config.js
+          # Explicitly create tokens.js
+          echo "// Generated Configuration" > tokens.js
+          echo "window.CONFIG = {" >> tokens.js
+          echo "  API_TOKEN: '${{ secrets.SECRET_API_TOKEN }}'," >> tokens.js
+          echo "};" >> tokens.js
           
           # Show file contents for verification
           echo "Config file contents:"
