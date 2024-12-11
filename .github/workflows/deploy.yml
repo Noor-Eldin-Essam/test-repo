@@ -10,8 +10,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # Remove old tokens file (if exists)
-      - name: Remove old tokens file (if exists)
+      # Remove old tokens.js file (if exists)
+      - name: Remove old tokens.js file (if exists)
         run: |
           if [ -f tokens.js ]; then
             echo "Removing old tokens.js file"
@@ -21,12 +21,18 @@ jobs:
           fi
         shell: bash
 
-      # Create new tokens.js file
-      - name: Create new tokens file
+      # Create new tokens.js file (This file will not be tracked by git)
+      - name: Create new tokens.js file
         run: |
           echo "export const validTokens = ['${{ secrets.SECRET_API_TOKEN }}'];" > ./tokens.js
           echo "New tokens.js file created:"
           cat tokens.js
+        shell: bash
+
+      # Temporarily remove tokens.js from .gitignore so it gets included in the build
+      - name: Temporarily remove tokens.js from .gitignore
+        run: |
+          sed -i '/tokens.js/d' .gitignore
         shell: bash
 
       # List files after creating tokens.js
@@ -49,6 +55,12 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: .  # Make sure this is correct if index.html is in the root
           destination_dir: .
+
+      # Add tokens.js back to .gitignore after deployment
+      - name: Add tokens.js back to .gitignore
+        run: |
+          echo "tokens.js" >> .gitignore
+        shell: bash
 
       # Verify deployment
       - name: Verify deployment
