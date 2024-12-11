@@ -10,11 +10,9 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      # Step 1: Checkout the code
       - name: Checkout code
         uses: actions/checkout@v3
       
-      # Step 2: Remove old tokens file
       - name: Remove old tokens file (if exists)
         run: |
           if [ -f tokens.js ]; then
@@ -24,43 +22,29 @@ jobs:
             echo "No existing tokens.js file to remove"
           fi
         shell: bash
-
-      # Step 3: Create new tokens.js file
+      
       - name: Create new tokens file
         run: |
           echo "export const validTokens = ['${{ secrets.SECRET_API_TOKEN }}'];" > tokens.js
           echo "New tokens.js file created:"
           cat tokens.js
         shell: bash
-
-      # Step 4: Debug file creation
-      - name: Debug tokens.js creation
-        run: |
-          if [ -f tokens.js ]; then
-            echo "tokens.js file successfully created:"
-            cat tokens.js
-          else
-            echo "tokens.js file was NOT created!"
-            exit 1
-          fi
-
-      # Step 5: List files for verification
+      
       - name: List files before deployment
         run: |
-          echo "Current directory content:"
+          pwd
           ls -la
         shell: bash
-
-      # Step 6: Deploy to GitHub Pages
+      
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: .
           destination_dir: .
-
-      # Step 7: Verify deployment
+          keep_files: true  # Preserve existing files in gh-pages branch
+      
       - name: Verify deployment
         run: |
           echo "Deployment completed"
-        shell: bash
+        shell: bash 
