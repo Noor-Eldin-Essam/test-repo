@@ -1,6 +1,9 @@
 name: Deploy Static Site
 
-on: push
+on:
+  push:
+    branches:
+      - main  # or the branch you're pushing from
 
 jobs:
   build-deploy:
@@ -29,7 +32,7 @@ jobs:
           cat tokens.js
         shell: bash
 
-      # Temporarily remove tokens.js from .gitignore so it gets included in the build
+      # Temporarily remove tokens.js from .gitignore
       - name: Temporarily remove tokens.js from .gitignore
         run: |
           sed -i '/tokens.js/d' .gitignore
@@ -53,10 +56,10 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .  # Make sure this is correct if index.html is in the root
+          publish_dir: .  # Make sure this is the correct directory where your `index.html` is
           destination_dir: .
 
-      # Add tokens.js back to .gitignore after deployment
+      # Add tokens.js back to .gitignore
       - name: Add tokens.js back to .gitignore
         run: |
           echo "tokens.js" >> .gitignore
