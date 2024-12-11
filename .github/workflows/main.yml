@@ -51,13 +51,6 @@ jobs:
           publish_dir: .   # Make sure this is the correct directory
           destination_dir: .
 
-      - name: List files after deployment
-        run: |
-          git fetch origin gh-pages
-          git checkout gh-pages
-          ls -la
-        shell: bash
-
       - name: Verify deployment
         run: |
           echo "Deployment completed"
