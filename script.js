@@ -11,8 +11,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
     console.log(token);
-    
-    console.log(hashedToken);
     console.log(validTokens[0]);
     
     
