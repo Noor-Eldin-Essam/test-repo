@@ -58,7 +58,6 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: .
           destination_dir: .
-          keep_files: true  # Preserve existing files in gh-pages branch
 
       # Step 7: Verify deployment
       - name: Verify deployment
