@@ -1,6 +1,9 @@
-name: Not working Deploy Static Site
+name: Deploy Static Site
 
-on: push
+on:
+  push:
+    branches:
+      - main
 
 jobs:
   build-deploy:
@@ -9,12 +12,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      # Step: Add tokens.js to .gitignore if it's not already there
-      - name: Ensure tokens.js is ignored by Git
-        run: |
-          echo "tokens.js" >> .gitignore
-        shell: bash
       
       - name: Remove old tokens file (if exists)
         run: |
@@ -25,32 +22,27 @@ jobs:
             echo "No existing tokens.js file to remove"
           fi
         shell: bash
-
+      
       - name: Create new tokens file
         run: |
           echo "export const validTokens = ['${{ secrets.SECRET_API_TOKEN }}'];" > tokens.js
           echo "New tokens.js file created:"
           cat tokens.js
         shell: bash
-
-      - name: List files after creating tokens.js
-        run: |
-          ls -la
-        shell: bash
-
+      
       - name: List files before deployment
         run: |
           pwd
           ls -la
         shell: bash
-
+      
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .   # Make sure this is the correct directory
+          publish_dir: .
           destination_dir: .
-
+      
       - name: Verify deployment
         run: |
           echo "Deployment completed"
