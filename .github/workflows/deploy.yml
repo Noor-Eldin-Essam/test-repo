@@ -20,7 +20,7 @@ jobs:
           
           # Show file contents for verification
           echo "Config file contents:"
-          cat config.js
+          cat tokens.js
         shell: bash
       
       - name: List Files
