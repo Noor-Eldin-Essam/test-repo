@@ -1,4 +1,4 @@
-name: Deploy Static Site
+name: Deploy Static Site with Node.js
 
 on:
   push:
@@ -21,7 +21,7 @@ jobs:
       - name: Install Dependencies
         run: npm install
 
-      - name: Inject Environment Variables
+      - name: Inject Secrets and Build Static Site
         env:
           API_URL: ${{ secrets.API_URL }}
           FEATURE_FLAG: ${{ secrets.FEATURE_FLAG }}
