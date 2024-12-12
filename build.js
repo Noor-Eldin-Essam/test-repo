@@ -1,15 +1,22 @@
-const fs = require('fs');
-const path = require('path');
+// Load environment variables from .env file
 require('dotenv').config();
 
-// Read HTML file
+const fs = require('fs');
+const path = require('path');
+
+// Access the environment variables
+const apiUrl = process.env.API_URL || 'Not Available';
+const featureFlag = process.env.FEATURE_FLAG || 'false';
+const secretKey = process.env.SECRET_API_TOKEN || 'Not Available';
+
+// Read the HTML file
 const htmlFilePath = path.join(__dirname, 'index.html');
 let htmlContent = fs.readFileSync(htmlFilePath, 'utf8');
 
-// Replace placeholders with environment variables
-htmlContent = htmlContent.replace(/{{API_URL}}/g, process.env.API_URL);
-htmlContent = htmlContent.replace(/{{FEATURE_FLAG}}/g, process.env.FEATURE_FLAG);
-htmlContent = htmlContent.replace(/{{SECRET_KEY}}/g, process.env.SECRET_API_TOKEN);
+// Replace placeholders in the HTML content with environment variables
+htmlContent = htmlContent.replace('{{API_URL}}', apiUrl)
+                          .replace('{{FEATURE_FLAG}}', featureFlag)
+                          .replace('{{SECRET_API_TOKEN}}', secretKey);
 
 // Output the updated file to 'dist' folder
 const outputDir = path.join(__dirname, 'dist');

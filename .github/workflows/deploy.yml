@@ -27,10 +27,10 @@ jobs:
           FEATURE_FLAG: ${{ secrets.FEATURE_FLAG }}
           SECRET_KEY: ${{ secrets.SECRET_API_TOKEN }}
         run: |
-          node build.js
+          node build.js  # This will inject the secrets into your static files
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./dist
+          publish_dir: ./dist  # This is where your built files should be located
