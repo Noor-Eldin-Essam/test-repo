@@ -1,24 +1,27 @@
+name: Deploy Static Site
+
+on:
+  push:
+    branches:
+      - main
+
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout code
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v3
 
-      # Set up Node.js
-      - name: Set up Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: 18
 
-      # Install dependencies
       - name: Install Dependencies
         run: npm install
 
-      # Build static website and inject environment variables
-      - name: Build Static Website with Environment Variables
+      - name: Inject Environment Variables
         env:
           API_URL: ${{ secrets.API_URL }}
           FEATURE_FLAG: ${{ secrets.FEATURE_FLAG }}
@@ -26,9 +29,8 @@ jobs:
         run: |
           node build.js
 
-      # Deploy step (e.g., GitHub Pages, AWS, etc.)
       - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          branch: gh-pages
-          folder: dist
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
