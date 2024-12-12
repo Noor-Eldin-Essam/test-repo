@@ -1,22 +1,21 @@
 const fs = require('fs');
 const path = require('path');
-require('dotenv').config();
+require('dotenv').config(); // Load .env file
 
-// Read HTML file
+// Read index.html file
 const htmlFilePath = path.join(__dirname, 'index.html');
 let htmlContent = fs.readFileSync(htmlFilePath, 'utf8');
 
-// Replace placeholders with environment variables
-htmlContent = htmlContent.replace(/{{API_URL}}/g, process.env.API_URL);
-htmlContent = htmlContent.replace(/{{FEATURE_FLAG}}/g, process.env.FEATURE_FLAG);
-htmlContent = htmlContent.replace(/{{SECRET_KEY}}/g, process.env.SECRET_API_TOKEN);
+// Inject environment variables into placeholders
+htmlContent = htmlContent.replace('{{API_URL}}', process.env.API_URL || 'Not Available');
+htmlContent = htmlContent.replace('{{FEATURE_FLAG}}', process.env.FEATURE_FLAG || 'false');
+htmlContent = htmlContent.replace('{{SECRET_KEY}}', process.env.SECRET_API_TOKEN || 'Not Available');
 
-// Output the updated file to 'dist' folder
+// Write updated HTML to the dist folder
 const outputDir = path.join(__dirname, 'dist');
 if (!fs.existsSync(outputDir)) {
   fs.mkdirSync(outputDir);
 }
-
 fs.writeFileSync(path.join(outputDir, 'index.html'), htmlContent);
 
-console.log('Environment variables have been injected successfully!');
+console.log('Environment variables injected successfully!');
