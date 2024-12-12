@@ -25,7 +25,7 @@ jobs:
         env:
           API_URL: ${{ secrets.API_URL }}
           FEATURE_FLAG: ${{ secrets.FEATURE_FLAG }}
-          SECRET_KEY: ${{ secrets.SECRET_API_TOKEN }}
+          SECRET_API_TOKEN: ${{ secrets.SECRET_API_TOKEN }}
         run: |
           node build.js  # This will inject the secrets into your static files
 
